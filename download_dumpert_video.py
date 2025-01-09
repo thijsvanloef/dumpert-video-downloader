@@ -1,8 +1,11 @@
-import requests
+"""Download video from Dumpert"""
+
 import subprocess
 import os
 import time
+import logging
 import requests
+
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -10,9 +13,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
-import argparse
-import logging
-import sys
 from colorlog import ColoredFormatter
 
 
@@ -37,11 +37,6 @@ handler.setFormatter(formatter)
 logger = logging.getLogger()
 logger.addHandler(handler)
 logger.setLevel(logging.INFO)
-
-# # Set up argument parser
-# parser = argparse.ArgumentParser(description='Download video from Dumpert')
-# parser.add_argument('url', type=str, help='URL of the Dumpert video page')
-# args = parser.parse_args()
 
 def download_video(url):
 # Use the provided URL
