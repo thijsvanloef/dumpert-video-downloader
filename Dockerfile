@@ -42,5 +42,7 @@ RUN chown -R download_worker /app /download
 # Set the user to run the application
 USER download_worker
 
+EXPOSE 8080
+
 # Run the download.py when the container launches
-CMD ["python", "download.py", "<dumperturl>"]
+CMD ["python", "web.py"]
