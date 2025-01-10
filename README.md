@@ -9,7 +9,7 @@ Dumpert Downloader is een webapplicatie waarmee je video's van Dumpert kunt down
 
 Vereisten:
 
-- Docker (Desktop)
+- [Docker (Desktop)](https://docs.docker.com/get-started/get-docker/)
 
 Draai de applicatie met Docker:
 
