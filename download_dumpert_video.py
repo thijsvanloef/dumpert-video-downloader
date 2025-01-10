@@ -42,7 +42,19 @@ def download_video(url):
     """Download video from Dumpert."""
 
     # Use the provided URL
-    dumpert_url = url
+
+    # Extract the video ID from the URL
+    if "selectedId=" in url:
+        video_id = url.split("selectedId=")[1]
+    else:
+        video_id = url.split("/")[-1]
+
+    # Construct the Dumpert URL
+    dumpert_url = f"https://www.dumpert.nl/item/{video_id}"
+
+    if os.path.exists(f"/download/video_{dumpert_url.split('/')[-1]}.mp4"):
+        logging.info("%s Video already downloaded. Skipping download.", dumpert_url)
+        return f"/download/video_{dumpert_url.split('/')[-1]}.mp4"
 
     # Send a GET request to the URL
     headers = {
@@ -65,7 +77,7 @@ def download_video(url):
         else:
             logging.warning("No source tag found in the video tag.")
     else:
-        logging.warning("No video tag found in the HTML content.")
+        logging.info("No video tag found in the HTML content. Trying to extract .ts files from the network logs using Selenium.")
         # Set up Selenium WebDriver
         chrome_options = Options()
         chrome_options.add_argument("--headless=new")  # Run in headless mode
@@ -161,23 +173,29 @@ def download_video(url):
             break
 
     # Stitch the .ts files together
-    with open("file_list.txt", "w", encoding="utf-8") as file_list:
+    with open(f"{unique_id}_file_list.txt", "w", encoding="utf-8") as file_list:
         for ts_file_path in ts_file_paths:
             file_list.write(f"file '{ts_file_path}'\n")
 
     # Convert the stitched .ts files to .mp4 using ffmpeg
-    mp4_file_path = f"/download/video_{dumpert_url.split('=')[1]}.mp4"
+    mp4_file_path = f"/download/video_{dumpert_url.split('/')[-1]}.mp4"
     logging.info("Starting TS files stitch and conversion")
-    subprocess.run(["ffmpeg", "-f", "concat", "-safe", "0", "-i", "file_list.txt", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-y", mp4_file_path], check=True)
+    subprocess.run([
+        "ffmpeg", "-f", "concat", "-safe", "0", 
+        "-i", f"{unique_id}_file_list.txt", 
+        "-c:v", "libx264", "-pix_fmt", "yuv420p", 
+        "-y", mp4_file_path
+    ], check=True)
     logging.info("TS files stitched and converted to MP4 successfully!")
 
     # Clean up the .ts files, the file list, and the folder
     for ts_file_path in ts_file_paths:
         os.remove(ts_file_path)
-    os.remove("file_list.txt")
+    os.remove(f"{unique_id}_file_list.txt")
     os.rmdir(ts_dir)
     logging.info("Temporary TS files, file list, and folder cleaned up successfully!")
 
+    logging.info("sending file %s", mp4_file_path)
     return mp4_file_path
 
 if __name__ == '__main__':
