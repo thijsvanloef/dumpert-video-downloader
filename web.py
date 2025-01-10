@@ -1,5 +1,5 @@
-# filepath: app.py
-from flask import Flask, render_template, request, url_for, flash, redirect, send_file
+"""This module contains the web application for the Dumpert video downloader."""
+from flask import Flask, render_template, request, flash, send_file
 import download_dumpert_video
 
 
@@ -9,6 +9,7 @@ app.config['SECRET_KEY'] = 'testing123'
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    """Renders the index page."""
     if request.method == 'POST':
         url = request.form['url']
         if not url:
@@ -19,5 +20,4 @@ def index():
 
 if __name__ == '__main__':
     from waitress import serve
-    serve(app, host='0.0.0.0', port=8080) 
-    # app.run(debug=True)
+    serve(app, host='0.0.0.0', port=8080)

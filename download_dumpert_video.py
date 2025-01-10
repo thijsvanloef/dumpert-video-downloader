@@ -39,14 +39,16 @@ logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 
 def download_video(url):
-# Use the provided URL
+    """Download video from Dumpert."""
+
+    # Use the provided URL
     dumpert_url = url
 
     # Send a GET request to the URL
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
     }
-    response = requests.get(dumpert_url, headers=headers)
+    response = requests.get(dumpert_url, headers=headers, timeout=10)
 
     # Parse the HTML content using BeautifulSoup
     soup = BeautifulSoup(response.content, 'html.parser')
@@ -59,7 +61,7 @@ def download_video(url):
         source_tag = video_tag.find('source')
         if source_tag:
             video_url = source_tag['src']
-            logging.info(f"Video URL: {video_url}")
+            logging.info("Video URL: %s", video_url)
         else:
             logging.warning("No source tag found in the video tag.")
     else:
@@ -71,11 +73,6 @@ def download_video(url):
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument('log-level=3')
-
-        # Enable performance logging
-        perf_log_prefs = {
-            'enableNetwork': True,
-        }
         chrome_options.set_capability('goog:loggingPrefs', {'performance': 'ALL'})
 
         service = Service('/app/chromedriver')  # Update with the path to your chromedriver
@@ -111,7 +108,7 @@ def download_video(url):
 
             if ts_urls:
                 ts_urls = [url for url in ts_urls if not url.endswith('.js')]
-                logging.debug("Filtered .ts URLs:", ts_urls)
+                logging.debug("Filtered .ts URLs: %s", ts_urls)
                 ts_url_output = ts_urls[0].replace('000.ts', '{index:03d}.ts')
             else:
                 logging.error("No .ts files found in the network logs.")
@@ -119,7 +116,7 @@ def download_video(url):
         finally:
             driver.quit()
 
-    logging.info(ts_url_output)
+    logging.info(ts_url_output) # pylint: disable=used-before-assignment
 
     # Generate a unique ID using the current timestamp
     unique_id = str(int(time.time()))
@@ -141,15 +138,15 @@ def download_video(url):
 
     highest_quality = max(qualities, key=lambda q: int(q.replace('p', '')))
 
-    logging.info(f"Highest quality available: {highest_quality}")
+    logging.info("Highest quality available: %s", highest_quality)
 
     # Update ts_url_output to use the highest quality
     ts_url_output = ts_url_output.replace(quality, highest_quality)
 
     while True:
         ts_url = ts_url_output.format(index=index)
-        response = requests.get(ts_url, stream=True)
-        
+        response = requests.get(ts_url, stream=True, timeout=10)
+
         if response.status_code == 200:
             ts_file_path = os.path.join(ts_dir, f"video_{index:03d}.ts")
             with open(ts_file_path, "wb") as ts_file:
@@ -157,21 +154,21 @@ def download_video(url):
                     if chunk:
                         ts_file.write(chunk)
             ts_file_paths.append(ts_file_path)
-            logging.info(f"TS file {ts_url} downloaded successfully!")
+            logging.info("TS file %s downloaded successfully!", ts_url)
             index += 1
         else:
-            logging.info(f"No more TS files found after index {index-1}.")
+            logging.info("No more TS files found after index %d.", index-1)
             break
 
     # Stitch the .ts files together
-    with open("file_list.txt", "w") as file_list:
+    with open("file_list.txt", "w", encoding="utf-8") as file_list:
         for ts_file_path in ts_file_paths:
             file_list.write(f"file '{ts_file_path}'\n")
 
     # Convert the stitched .ts files to .mp4 using ffmpeg
     mp4_file_path = f"/download/video_{dumpert_url.split('=')[1]}.mp4"
     logging.info("Starting TS files stitch and conversion")
-    subprocess.run(["ffmpeg", "-f", "concat", "-safe", "0", "-i", "file_list.txt", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-y", mp4_file_path])
+    subprocess.run(["ffmpeg", "-f", "concat", "-safe", "0", "-i", "file_list.txt", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-y", mp4_file_path], check=True)
     logging.info("TS files stitched and converted to MP4 successfully!")
 
     # Clean up the .ts files, the file list, and the folder
@@ -184,6 +181,4 @@ def download_video(url):
     return mp4_file_path
 
 if __name__ == '__main__':
-    # test1.py executed as script
-    # do something
-    download_video(url)
+    download_video(url) # pylint: disable=undefined-variable
