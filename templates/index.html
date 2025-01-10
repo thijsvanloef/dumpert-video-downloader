@@ -9,8 +9,16 @@
             </ul>
         {% endif %}
     {% endwith %}
-    <form method="post">
-        <input type="text" name="url" placeholder="Enter URL">
+    <form id="download" method="post">
+        <input type="text" name="url" placeholder="https://www.dumpert.nl/item/000000000_00000000 of https://www.dumpert.nl/(toppers/dumperttv/zoek)?selectedId=000000000_00000000">
         <input type="submit" value="Submit">
     </form>
+    <script>
+        document.getElementById('download').addEventListener('submit', function(event) {
+            var loading = document.createElement('div');
+            loading.className = 'loading';
+            loading.innerHTML = 'Loading please wait, do not close this page...';
+            document.body.appendChild(loading);
+        });
+    </script>
 {% endblock %}

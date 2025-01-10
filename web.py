@@ -10,11 +10,11 @@ app.config['SECRET_KEY'] = 'testing123'
 @app.route('/', methods=['GET', 'POST'])
 def index():
     """Renders the index page."""
-    if request.method == 'POST':
+    if request.method == 'POST' and request.form.get('url'):
         url = request.form['url']
         if not url:
             flash('URL is required!')
-        if url:
+        else:
             return send_file(download_dumpert_video.download_video(url), as_attachment=True)
     return render_template('index.html')
 
