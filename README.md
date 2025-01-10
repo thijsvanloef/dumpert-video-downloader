@@ -29,9 +29,14 @@ Volg deze stappen om een video van Dumpert te downloaden:
 - [Dumpert Video Downloader](#dumpert-video-downloader)
   - [Quick Start](#quick-start)
   - [Inhoudsopgave](#inhoudsopgave)
+  - [Screenshots](#screenshots)
   - [Dev Installatie](#dev-installatie)
     - [Docker](#docker)
   - [Bijdragen](#bijdragen)
+ 
+## Screenshots
+
+![image](https://github.com/user-attachments/assets/b3904425-8dbf-4416-91d6-f920da412ef0)
 
 ## Dev Installatie
 
