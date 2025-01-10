@@ -5,16 +5,35 @@
 
 Dumpert Downloader is een webapplicatie waarmee je video's van Dumpert kunt downloaden. De applicatie is gebouwd met Flask en maakt gebruik van Selenium en BeautifulSoup om de video's te scrapen en te downloaden.
 
+## Quick Start
+
+Vereisten:
+
+- Docker (Desktop)
+
+Draai de applicatie met Docker:
+
+```bash
+docker run -d -p 8080:8080 ghcr.io/thijsvanloef/dumpert-video-downloader:latest
+```
+
+Volg deze stappen om een video van Dumpert te downloaden:
+
+1. Open de webapplicatie in je browser [hier](http://localhost:8080).
+2. Voer de URL van de Dumpert-video in die je wilt downloaden.
+3. Klik op "Submit".
+4. De video wordt gedownload en de video wordt automatisch gedownload
+
 ## Inhoudsopgave
 
 - [Dumpert Video Downloader](#dumpert-video-downloader)
+  - [Quick Start](#quick-start)
   - [Inhoudsopgave](#inhoudsopgave)
-  - [Installatie](#installatie)
-  - [Gebruik](#gebruik)
-  - [Docker](#docker)
+  - [Dev Installatie](#dev-installatie)
+    - [Docker](#docker)
   - [Bijdragen](#bijdragen)
 
-## Installatie
+## Dev Installatie
 
 Volg deze stappen om de applicatie lokaal te installeren en uit te voeren:
 
@@ -46,14 +65,7 @@ Volg deze stappen om de applicatie lokaal te installeren en uit te voeren:
 
 De applicatie is nu toegankelijk op `http://127.0.0.1:8080`.
 
-## Gebruik
-
-1. Open de webapplicatie in je browser.
-2. Voer de URL van de Dumpert-video in die je wilt downloaden.
-3. Klik op "Submit".
-4. De video wordt gedownload en je krijgt een downloadlink aangeboden.
-
-## Docker
+### Docker
 
 Je kunt de applicatie ook uitvoeren met Docker. Volg deze stappen:
 
