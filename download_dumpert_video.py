@@ -155,6 +155,7 @@ def download_video(url):
     # Update ts_url_output to use the highest quality
     ts_url_output = ts_url_output.replace(quality, highest_quality)
 
+    index = 0  # Start from 0 to include 000.ts
     while True:
         ts_url = ts_url_output.format(index=index)
         response = requests.get(ts_url, stream=True, timeout=10)
