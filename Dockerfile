@@ -19,7 +19,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     wget \
     gnupg \
     ffmpeg \
-    unzip
+    unzip \
+    chromium-common=131.0.6778.139-1~deb12u1 \
+    chromium=131.0.6778.139-1~deb12u1
 
 # Download ChromeDriver
 RUN wget -q -O /tmp/chromedriver.zip https://storage.googleapis.com/chrome-for-testing-public/131.0.6778.264/linux64/chromedriver-linux64.zip \
@@ -27,14 +29,8 @@ RUN wget -q -O /tmp/chromedriver.zip https://storage.googleapis.com/chrome-for-t
     && mv /tmp/chromedriver-linux64/chromedriver /app \
     && chmod +x /app/chromedriver
 
-# Install Chrome
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \ 
-    && echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list \
-    && apt-get update && apt-get -y install google-chrome-stable
-
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
-
 
 # Change the ownership of the /app directory to the download_worker user
 RUN chown -R download_worker /app /download
