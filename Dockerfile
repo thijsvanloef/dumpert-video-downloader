@@ -1,7 +1,7 @@
 FROM python:3.12-slim
 
 # Add a user to run the application and create a directory to store the downloaded files
-RUN useradd download_worker \
+RUN adduser download_worker \
     && mkdir /download
 
 # Set the working directory
