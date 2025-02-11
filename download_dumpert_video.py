@@ -87,7 +87,7 @@ def download_video(url):
         chrome_options.add_argument('log-level=3')
         chrome_options.set_capability('goog:loggingPrefs', {'performance': 'ALL'})
 
-        service = Service('/app/chromedriver')  # Update with the path to your chromedriver
+        service = Service('/usr/bin/chromedriver')  # Update with the path to your chromedriver
         driver = webdriver.Chrome(service=service, options=chrome_options)
 
         try:

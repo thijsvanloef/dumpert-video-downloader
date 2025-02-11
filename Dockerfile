@@ -24,14 +24,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     chromium=131.0.6778.139-1~deb12u1
 
 # Download ChromeDriver
-RUN if [ "$(uname -m)" = "aarch64" ]; then \
-    wget -q -O /tmp/chromedriver.zip https://storage.googleapis.com/chrome-for-testing-public/131.0.6778.264/mac-arm64/chromedriver-mac-arm64.zip; \
-    else \
-    wget -q -O /tmp/chromedriver.zip https://storage.googleapis.com/chrome-for-testing-public/131.0.6778.264/linux64/chromedriver-linux64.zip; \
-    fi \
-    && unzip /tmp/chromedriver.zip -d /tmp \
-    && mv /tmp/chromedriver-*/chromedriver /app \
-    && chmod +x /app/chromedriver
+RUN apt-get update -y \
+  && apt-get -qqy install chromium-driver \
+  && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
