@@ -13,13 +13,10 @@ def index():
     """Renders the index page."""
     if request.method == 'POST' and request.form.get('url'):
         url = request.form['url']
-        if not verify_input(url):
-            flash('Invalid Dumpert URL!')
-        else:
-            try:
-                return send_file(download_video(url), as_attachment=True)
-            except Exception as e:
-                flash(f'Error downloading video: {str(e)}')
+        try:
+            return send_file(download_video(url), as_attachment=True)
+        except Exception as e:
+            flash(f'Error downloading video: {str(e)}')
     return render_template('index.html')
     
 if __name__ == '__main__':
