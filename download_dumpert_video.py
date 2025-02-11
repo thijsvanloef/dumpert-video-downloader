@@ -38,6 +38,29 @@ logger = logging.getLogger()
 logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 
+def verify_input(url):
+    """Verify the input URL."""
+
+    # Check if the URL is empty
+    if not url:
+        logging.error("URL is required!")
+        return
+
+    # Check if the URL is a valid Dumpert URL
+    valid_prefixes = [
+        "https://www.dumpert.nl/item/",
+        "https://www.dumpert.nl/toppers?selectedId=",
+        "https://www.dumpert.nl/dumperttv?selectedId=",
+        "https://www.dumpert.nl/zoek/"
+    ]
+    if not any(url.startswith(prefix) for prefix in valid_prefixes):
+        logging.error("Invalid Dumpert URL!")
+        return
+
+    logging.info("URL verified successfully!")
+
+    return url
+
 def download_video(url):
     """Download video from Dumpert."""
 
@@ -200,4 +223,5 @@ def download_video(url):
     return mp4_file_path
 
 if __name__ == '__main__':
+    verify_input(url) # pylint: disable=undefined-variable
     download_video(url) # pylint: disable=undefined-variable
