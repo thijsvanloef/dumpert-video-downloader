@@ -1,10 +1,11 @@
 """This module contains the web application for the Dumpert video downloader."""
 from flask import Flask, render_template, request, flash, send_file
 import download_dumpert_video
+import secrets
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'testing123'
+app.config['SECRET_KEY'] = secrets.token_hex(32)
 
 
 @app.route('/', methods=['GET', 'POST'])

@@ -1,7 +1,7 @@
 FROM python:3.12-slim
 
 # Add a user to run the application and create a directory to store the downloaded files
-RUN adduser download_worker \
+RUN useradd download_worker \
     && mkdir /download
 
 # Set the working directory
@@ -24,9 +24,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     chromium=131.0.6778.139-1~deb12u1
 
 # Download ChromeDriver
-RUN wget -q -O /tmp/chromedriver.zip https://storage.googleapis.com/chrome-for-testing-public/131.0.6778.264/linux64/chromedriver-linux64.zip \
+RUN if [ "$(uname -m)" = "aarch64" ]; then \
+    wget -q -O /tmp/chromedriver.zip https://storage.googleapis.com/chrome-for-testing-public/131.0.6778.264/mac-arm64/chromedriver-mac-arm64.zip; \
+    else \
+    wget -q -O /tmp/chromedriver.zip https://storage.googleapis.com/chrome-for-testing-public/131.0.6778.264/linux64/chromedriver-linux64.zip; \
+    fi \
     && unzip /tmp/chromedriver.zip -d /tmp \
-    && mv /tmp/chromedriver-linux64/chromedriver /app \
+    && mv /tmp/chromedriver-*/chromedriver /app \
     && chmod +x /app/chromedriver
 
 # Install any needed packages specified in requirements.txt
