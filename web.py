@@ -16,7 +16,10 @@ def index():
         if not url:
             flash('URL is required!')
         else:
-            return send_file(download_dumpert_video.download_video(url), as_attachment=True)
+            if not download_dumpert_video.verify_input(url):
+                flash('Invalid Dumpert URL!')
+            else:
+                return send_file(download_dumpert_video.download_video(url), as_attachment=True)
     return render_template('index.html')
 
 if __name__ == '__main__':
