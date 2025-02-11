@@ -20,13 +20,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gnupg \
     ffmpeg \
     unzip \
-    chromium-common=131.0.6778.139-1~deb12u1 \
-    chromium=131.0.6778.139-1~deb12u1
-
-# Download ChromeDriver
-RUN apt-get update -y \
-  && apt-get -qqy install chromium-driver \
-  && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+    chromium-common \
+    chromium \
+    chromium-driver \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
