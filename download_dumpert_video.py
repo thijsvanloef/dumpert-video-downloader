@@ -81,9 +81,9 @@ def download_video(url):
     # Construct the Dumpert URL
     dumpert_url = f"https://www.dumpert.nl/item/{video_id}"
 
-    if os.path.exists(f"/download/video_{dumpert_url.split('/')[-1]}.mp4"):
+    if os.path.exists(f"/download/dumpert_loef_dev_{dumpert_url.split('/')[-1]}.mp4"):
         logging.info("%s Video already downloaded. Skipping download.", dumpert_url)
-        return f"/download/video_{dumpert_url.split('/')[-1]}.mp4"
+        return f"/download/dumpert_loef_dev_{dumpert_url.split('/')[-1]}.mp4"
 
     # Send a GET request to the URL
     headers = {
@@ -193,7 +193,7 @@ def download_video(url):
         response = requests.get(ts_url, stream=True, timeout=10)
 
         if response.status_code == 200:
-            ts_file_path = os.path.join(ts_dir, f"video_{index:03d}.ts")
+            ts_file_path = os.path.join(ts_dir, f"dumpert_loef_dev_{index:03d}.ts")
             with open(ts_file_path, "wb") as ts_file:
                 for chunk in response.iter_content(chunk_size=1024):
                     if chunk:
@@ -211,7 +211,7 @@ def download_video(url):
             file_list.write(f"file '{ts_file_path}'\n")
 
     # Convert the stitched .ts files to .mp4 using ffmpeg
-    mp4_file_path = f"/download/video_{dumpert_url.split('/')[-1]}.mp4"
+    mp4_file_path = f"/download/dumpert_loef_dev_{dumpert_url.split('/')[-1]}.mp4"
     logging.info("Starting TS files stitch and conversion")
     subprocess.run([
         "ffmpeg", "-f", "concat", "-safe", "0", 
