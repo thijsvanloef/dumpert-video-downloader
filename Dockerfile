@@ -1,8 +1,8 @@
 FROM python:3.12-slim
 
 # Add a user to run the application and create a directory to store the downloaded files
-RUN adduser download_worker \
-    && mkdir /download
+RUN adduser download_worker && \
+    mkdir /download
 
 # Set the working directory
 WORKDIR /app
@@ -30,12 +30,12 @@ COPY . /app
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Change the ownership of the /app directory to the download_worker user
-RUN chown -R download_worker /app /download
+RUN chown download_worker -R /app /download
 
 # Set the user to run the application
 USER download_worker
 
 EXPOSE 8080
 
-# Run the download.py when the container launches
+# Run the web.py when the container launches
 CMD ["python", "web.py"]
