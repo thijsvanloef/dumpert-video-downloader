@@ -1,40 +1,36 @@
 body {
     background-color: #1B1B1B;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
 }
+
 .title {
-    padding: 5px 15px 15px 15px;
+    padding: 5px 15px;
     background-color: #272727;
     color: white;
+    text-align: center;
 }
+
 .message {
     padding: 10px;
     margin: 5px;
     background-color: #f3f3f3;
     text-align: center;
 }
+
 h1 {
     color: #66CC22;
-    font-size: 3em;
-    margin-left: 50px;
-    text-decoration: none;
+    font-size: 2.5em;
+    margin: 20px 0;
     text-align: center;
 }
-p {
-    margin-left: 50px;
-    margin-right: 50px;
+
+p, .alert, .content {
+    margin: 0 20px;
     text-align: center;
 }
-.alert {
-    margin-left: 50px;
-    margin-right: 50px;
-    text-align: center;
-    color: red;
-}
-.content {
-    margin-left: 50px;
-    margin-right: 50px;
-    text-align: center;
-}
+
 footer {
     position: fixed;
     left: 0;
@@ -45,6 +41,7 @@ footer {
     text-align: center;
     padding: 10px;
 }
+
 input[type="submit"] {
     background-color: #66CC22;
     color: white;
@@ -52,18 +49,21 @@ input[type="submit"] {
     padding: 10px 20px;
     cursor: pointer;
     font-size: 1em;
-    margin-left: 10px;
+    margin: 10px 0;
 }
+
 a {
     color: #66CC22;
     text-decoration: none;
 }
+
 input[type="text"] {
-    width: 50%;
+    width: 80%;
     padding: 10px;
     margin: 10px 0;
     box-sizing: border-box;
 }
+
 .loading {
     position: fixed;
     top: 50%;
@@ -71,4 +71,18 @@ input[type="text"] {
     transform: translate(-50%, -50%);
     font-size: 1.5em;
     color: white;
+}
+
+@media (min-width: 768px) {
+    h1 {
+        font-size: 3em;
+    }
+
+    p, .alert, .content {
+        margin: 0 50px;
+    }
+
+    input[type="text"] {
+        width: 50%;
+    }
 }
