@@ -14,6 +14,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from colorlog import ColoredFormatter
+import re
 
 
 # Set up logging
@@ -48,29 +49,34 @@ def verify_input(url):
 
     # Check if the URL is a valid Dumpert URL
     valid_prefixes = [
-        "https://www.dumpert.nl/item/",
-        "https://www.dumpert.nl/toppers?selectedId=",
-        "https://www.dumpert.nl/dumperttv?selectedId=",
-        "https://www.dumpert.nl/zoek/"
+        "https://www.dumpert.nl/"
     ]
     if not any(url.startswith(prefix) for prefix in valid_prefixes):
         logging.error("Invalid Dumpert URL!")
-        return
+        raise ValueError("Invalid Dumpert URL!")
+    
+    # Check if the url contains a valid video ID
+    # Define the regex pattern for the video ID
+    pattern = re.compile(r'\d{9}_[a-fA-F0-9]{8}')
+
+    # Search for the pattern in the URL
+    match = pattern.search(url)
+    if not match:
+        logging.error("Invalid video ID in the URL!")
+        raise ValueError("Invalid video ID in the URL!")
+
+    # Extract the video ID
+    id = match.group(0)
 
     logging.info("URL verified successfully!")
 
-    return url
+    return id
 
 def download_video(url):
     """Download video from Dumpert."""
 
-    # Use the provided URL
-
-    # Extract the video ID from the URL
-    if "selectedId=" in url:
-        video_id = url.split("selectedId=")[1]
-    else:
-        video_id = url.split("/")[-1]
+    # Verify the provided URL
+    video_id = verify_input(url)
 
     # Construct the Dumpert URL
     dumpert_url = f"https://www.dumpert.nl/item/{video_id}"
@@ -84,6 +90,9 @@ def download_video(url):
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
     }
     response = requests.get(dumpert_url, headers=headers, timeout=10)
+    if response.status_code != 200:
+        logging.error("Failed to retrieve the page. Status code: %d", response.status_code)
+        raise Exception(f"Failed to retrieve the page. Status code: {response.status_code}")
 
     # Parse the HTML content using BeautifulSoup
     soup = BeautifulSoup(response.content, 'html.parser')
@@ -223,5 +232,4 @@ def download_video(url):
     return mp4_file_path
 
 if __name__ == '__main__':
-    verify_input(url) # pylint: disable=undefined-variable
     download_video(url) # pylint: disable=undefined-variable
