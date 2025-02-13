@@ -13,31 +13,20 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
-from colorlog import ColoredFormatter
 import re
 
 
-# Set up logging
-# Create a formatter with colors
-formatter = ColoredFormatter(
-    "%(log_color)s%(levelname)s:%(name)s:%(message)s",
-    datefmt=None,
-    reset=True,
-    log_colors={
-        'DEBUG': 'cyan',
-        'INFO': 'white',
-        'WARNING': 'yellow',
-        'ERROR': 'red',
-        'CRITICAL': 'red,bg_white',
-    }
+# Create a custom formatter
+formatter = logging.Formatter(
+    '{"time": "%(asctime)s", "name": "%(name)s", "level": "%(levelname)s", "message": "%(message)s"}'
 )
-
 # Set up the logger
 handler = logging.StreamHandler()
 handler.setFormatter(formatter)
 logger = logging.getLogger()
 logger.addHandler(handler)
 logger.setLevel(logging.INFO)
+logger.name = "DumpertVideoDownloader"
 
 def verify_input(url):
     """Verify the input URL."""
@@ -130,7 +119,6 @@ def download_video(url):
             video_element = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.TAG_NAME, "video"))
             )
-
             # Start video playback
             driver.execute_script("arguments[0].play();", video_element)
 
@@ -156,6 +144,10 @@ def download_video(url):
                 ts_url_output = ts_urls[0].replace('000.ts', '{index:03d}.ts')
             else:
                 logging.error("No .ts files found in the network logs.")
+        
+        except Exception as e:
+            logging.error("An error occurred: %s", str(e))
+            raise Exception(f"An error occurred: {str(e)}")
 
         finally:
             driver.quit()
@@ -213,12 +205,20 @@ def download_video(url):
     # Convert the stitched .ts files to .mp4 using ffmpeg
     mp4_file_path = f"/download/dumpert_loef_dev_{dumpert_url.split('/')[-1]}.mp4"
     logging.info("Starting TS files stitch and conversion")
-    subprocess.run([
-        "ffmpeg", "-f", "concat", "-safe", "0", 
-        "-i", f"{unique_id}_file_list.txt", 
-        "-c:v", "libx264", "-pix_fmt", "yuv420p", 
-        "-y", mp4_file_path
-    ], check=True)
+    if logger.level == logging.DEBUG:
+        subprocess.run([
+            "ffmpeg", "-f", "concat", "-safe", "0", 
+            "-i", f"{unique_id}_file_list.txt", 
+            "-c:v", "libx264", "-pix_fmt", "yuv420p", 
+            "-y", mp4_file_path
+        ], check=True)
+    else:
+        subprocess.run([
+            "ffmpeg", "-f", "concat", "-safe", "0", 
+            "-i", f"{unique_id}_file_list.txt", 
+            "-c:v", "libx264", "-pix_fmt", "yuv420p", 
+            "-y", mp4_file_path
+        ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     logging.info("TS files stitched and converted to MP4 successfully!")
 
     # Clean up the .ts files, the file list, and the folder
