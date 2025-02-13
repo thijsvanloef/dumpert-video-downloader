@@ -3,7 +3,6 @@ from flask import Flask, render_template, request, flash, send_file, Response
 from download_dumpert_video import download_video
 import secrets
 
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = secrets.token_hex(32)
 

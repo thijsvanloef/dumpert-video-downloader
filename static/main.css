@@ -31,6 +31,10 @@ p, .alert, .content {
     text-align: center;
 }
 
+.alert {
+    color: red;
+}
+
 footer {
     position: fixed;
     left: 0;
