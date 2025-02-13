@@ -37,5 +37,9 @@ USER download_worker
 
 EXPOSE 8080
 
+# Add a healthcheck
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD wget --spider --quiet http://127.0.0.1:8080 || exit 1
+
 # Run the web.py when the container launches
 CMD ["python", "web.py"]
