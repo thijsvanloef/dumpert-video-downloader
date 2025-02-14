@@ -1,5 +1,5 @@
 ---
-    name: Developer image
+    name: Latest Image
     on:  # yamllint disable-line rule:truthy
       push:
         branches: [main]
