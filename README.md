@@ -1,8 +1,5 @@
 # Dumpert Video Downloader
 
-> [!IMPORTANT]  
-> Deze applicatie is niet productieklaar!
-
 Dumpert Downloader is een webapplicatie waarmee je video's van Dumpert kunt downloaden. De applicatie is gebouwd met Flask en maakt gebruik van Selenium en BeautifulSoup om de video's te scrapen en te downloaden.
 
 ## Quick Start
