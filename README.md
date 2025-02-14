@@ -1,5 +1,8 @@
 # Dumpert Video Downloader
 
+> [!IMPORTANT]  
+> Op geen enkele wijze geassocieerd met dumpert.nl of DT MEDIA B.V., gebruik deze tool op eigen risico
+
 Dumpert Downloader is een webapplicatie waarmee je video's van Dumpert kunt downloaden. De applicatie is gebouwd met Flask en maakt gebruik van Selenium en BeautifulSoup om de video's te scrapen en te downloaden.
 
 ## Quick Start
