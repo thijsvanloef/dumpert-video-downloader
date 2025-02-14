@@ -26,9 +26,22 @@ h1 {
     text-align: center;
 }
 
-p, .alert, .content {
+p, .alert, .content, .explaination {
     margin: 0 20px;
     text-align: center;
+    list-style: inside;
+}
+
+.explaination {
+    color: white;
+    text-align: center;
+}
+
+.explaination ol {
+    display: inline-block;
+    text-align: left;
+    margin: 0 auto;
+    padding: 0;
 }
 
 .alert {
@@ -88,5 +101,11 @@ input[type="text"] {
 
     input[type="text"] {
         width: 50%;
+    }
+}
+
+@media (max-width: 767px) {
+    footer {
+        position: static;
     }
 }
