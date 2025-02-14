@@ -31,6 +31,24 @@ def download():
         return send_file(file_path, as_attachment=True)
     return "Bestand niet gevonden", 404
 
+@app.route('/robots.txt')
+def robots_txt():
+    """Serves robots.txt."""
+    content = "User-agent: *\nAllow: /\n\nSitemap: https://dumpert.loef.dev/sitemap.xml"
+    return Response(content, mimetype='text/plain')
+
+@app.route('/sitemap.xml')
+def sitemap_xml():
+    """Serves sitemap.xml."""
+    content = """<?xml version="1.0" encoding="UTF-8"?>
+    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+        <url>
+            <loc>https://dumpert.loef.dev/</loc>
+            <changefreq>weekly</changefreq>
+        </url>
+    </urlset>"""
+    return Response(content, mimetype='application/xml')
+
 if __name__ == '__main__':
     from waitress import serve
     serve(app, host='0.0.0.0', port=8080, threads=4)
