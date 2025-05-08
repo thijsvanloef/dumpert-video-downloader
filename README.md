@@ -1,3 +1,5 @@
+# ARCHIVED, PROJECT RENDERED OBSOLETE DUE TO YT-DLP
+
 # Dumpert Video Downloader
 
 > [!IMPORTANT]  
